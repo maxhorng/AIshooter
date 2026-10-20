@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101714">
-  <meta name="description" content="AIshooter 是一款把加減法練習變成第一人稱射擊挑戰的數學遊戲。">
-  <title>AIshooter｜數學射擊訓練場</title>
+  <meta name="description" content="AIshooter 精準射擊訓練場，挑戰移動假人靶，練習爆頭、連續射擊與壓槍控制。">
+  <title>AIshooter｜精準射擊訓練場</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +41,7 @@
     .launch-kicker{font-family:'DM Mono',monospace;font-size:10px;color:var(--lime);letter-spacing:.14em;margin-bottom:12px}
     .launch-card h2{font-size:clamp(29px,5vw,46px);letter-spacing:-.07em;font-weight:900;line-height:1.02;margin:0 0 12px}
     .launch-card p{font-size:13px;color:#b2beb2;line-height:1.8;margin:0 0 20px;max-width:430px}
-    .launch-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;margin-bottom:16px}
+    .launch-controls{display:grid;grid-template-columns:1fr;gap:14px;align-items:end;margin-bottom:16px}
     .launch-controls label{display:block;font-size:10px;color:#9baa9d;margin:0 0 7px}
     .form-select{background-color:#202b24;color:#e9eee3;border-color:#425044;font-size:12px;border-radius:8px;padding-top:10px;padding-bottom:10px}
     .form-select:focus{border-color:var(--lime);box-shadow:0 0 0 .18rem #c1f36d26}
@@ -96,7 +96,10 @@
       .launch-card{padding:22px 19px}
       .launch-controls{grid-template-columns:1fr;gap:11px}
       .game-frame{min-height:450px}
-      .readouts-right .readout:first-child{display:none}
+      .ui-top{gap:6px}
+      .ui-top>.readout{min-width:88px}
+      .readouts-right .readout{min-width:61px;padding:6px 7px}
+      .readouts-right .readout strong{font-size:12px}
       .mission-box{max-width:210px}
     }
   </style>
@@ -104,36 +107,35 @@
 <body>
   <header class="site-header page-gutter">
     <div class="header-inner">
-      <a class="brand" href="#top" aria-label="AIshooter 首頁"><span class="brand-icon">✳</span><span class="brand-name">AIshooter<small>MATH RANGE</small></span></a>
+      <a class="brand" href="#top" aria-label="AIshooter 首頁"><span class="brand-icon">✳</span><span class="brand-name">AIshooter<small>AIM TRAINING</small></span></a>
       <div class="header-right"><div class="system-status"><span class="status-dot"></span>訓練場系統待命</div><div class="header-score">個人最佳 <strong id="best-score">000000</strong></div></div>
     </div>
   </header>
   <main id="top" class="page-gutter">
-    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;ARITHMETIC TRAINING</div><h1>算得快，瞄得準。</h1></div><div class="topline-note">鎖定算式，找出正確答案。每一次命中都讓你的心算更快一點。</div></div>
-    <section class="game-panel" aria-label="AIshooter 加減法射擊遊戲">
+    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;PRECISION RANGE</div><h1>瞄得準，壓得住。</h1></div><div class="topline-note">假人靶會持續加速移動。瞄準頭部一發擊倒，命中身體三發擊倒，連射時向下壓槍修正後座力。</div></div>
+    <section class="game-panel" aria-label="AIshooter 精準射擊訓練場">
       <div class="game-frame" id="game"></div>
       <div class="game-ui" aria-hidden="true">
         <div class="ui-top">
           <div class="readout"><span>SCORE</span><strong id="score-display">000000</strong></div>
-          <div class="readouts-right"><div class="readout"><span>TIME</span><strong id="time-display">01:00</strong></div><div class="readout"><span>STREAK</span><strong id="streak-display">× 00</strong></div><div class="readout"><span>HITS</span><strong id="hits-display">00</strong></div></div>
+          <div class="readouts-right"><div class="readout"><span>TIME</span><strong id="time-display">01:00</strong></div><div class="readout"><span>STREAK</span><strong id="streak-display">× 00</strong></div><div class="readout"><span>ACCURACY</span><strong id="accuracy-display">100%</strong></div></div>
         </div>
-        <div class="ui-bottom"><div class="mission-box"><span>MISSION</span><strong id="mission-display">先射中算式，再命中正確答案</strong></div><div class="weapon-label">MOUSE AIM&nbsp;&nbsp; CLICK TO FIRE</div></div>
+        <div class="ui-bottom"><div class="mission-box"><span>MISSION</span><strong id="mission-display">頭部一發擊倒，身體三發擊倒</strong></div><div class="weapon-label">HOLD TO FIRE&nbsp;&nbsp; PULL DOWN TO CONTROL RECOIL</div></div>
       </div>
       <div class="game-overlay" id="overlay">
         <div class="launch-card">
           <div class="launch-kicker">AIshooter&nbsp; / &nbsp;FIELD TRAINING</div>
-          <h2 id="overlay-title">進入數學射擊訓練</h2>
-          <p id="overlay-copy">用第一人稱視角瞄準靶場。先射中公式，再射中相符的答案。答對連續得分，答錯會扣分。</p>
+          <h2 id="overlay-title">進入精準射擊訓練</h2>
+          <p id="overlay-copy">限時 60 秒挑戰移動假人靶。頭部一發擊倒，身體要命中三發。靶速會隨時間增加，按住左鍵連射時記得向下壓槍。</p>
           <div class="launch-controls" id="launch-controls">
-            <div><label for="operation-mode">訓練內容</label><select class="form-select" id="operation-mode"><option value="mixed">加法與減法</option><option value="addition">加法</option><option value="subtraction">減法</option></select></div>
-            <div><label for="difficulty-mode">挑戰難度</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
+            <div><label for="difficulty-mode">起始靶速</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
           </div>
           <button class="btn-launch" id="start-button" type="button">開始訓練</button>
-          <div class="overlay-hint">滑鼠移動瞄準並點擊射擊<br>使用 A 與 D 或方向鍵左右移動</div>
+          <div class="overlay-hint">移動滑鼠瞄準，按住左鍵連續射擊<br>連射時向下移動滑鼠壓住後座力</div>
         </div>
       </div>
     </section>
-    <div class="game-footer"><div class="controls"><span><kbd class="control-key">A</kbd><kbd class="control-key">D</kbd>移動</span><span><kbd class="control-key">滑鼠</kbd>瞄準</span><span><kbd class="control-key">左鍵</kbd>射擊</span></div><div class="footer-state"><b>LIVE</b>&nbsp; 加減法反應訓練</div></div>
+    <div class="game-footer"><div class="controls"><span><kbd class="control-key">滑鼠</kbd>瞄準</span><span><kbd class="control-key">按住左鍵</kbd>連射</span><span><kbd class="control-key">向下</kbd>壓槍</span><span><kbd class="control-key">A</kbd><kbd class="control-key">D</kbd>移動</span></div><div class="footer-state"><b>LIVE</b>&nbsp; 移動靶精準射擊</div></div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
   <script>
@@ -142,13 +144,11 @@
       title:document.getElementById('overlay-title'),
       copy:document.getElementById('overlay-copy'),
       start:document.getElementById('start-button'),
-      controls:document.getElementById('launch-controls'),
-      operation:document.getElementById('operation-mode'),
       difficulty:document.getElementById('difficulty-mode'),
       score:document.getElementById('score-display'),
       time:document.getElementById('time-display'),
       streak:document.getElementById('streak-display'),
-      hits:document.getElementById('hits-display'),
+      accuracy:document.getElementById('accuracy-display'),
       best:document.getElementById('best-score'),
       mission:document.getElementById('mission-display')
     }
@@ -171,24 +171,34 @@
         gameScene=scene
         scene.paint=scene.add.graphics()
         scene.overlayPaint=scene.add.graphics()
-        scene.targetTexts=[]
-        scene.targets=[]
         scene.score=0
         scene.streak=0
+        scene.eliminations=0
+        scene.shots=0
         scene.hits=0
         scene.timeLeft=60
-        scene.currentMode='mixed'
+        scene.elapsedMs=0
         scene.difficulty='calm'
+        scene.baseSpeed=55
         scene.playerLane=0
-        scene.message='先射中算式，再命中正確答案'
+        scene.message='頭部一發擊倒，身體三發擊倒'
         scene.aim={x:scene.scale.width/2,y:scene.scale.height/2}
+        scene.recoil=0
+        scene.weaponKick=0
+        scene.muzzleFlash=0
         scene.flashAlpha=0
+        scene.fireHeld=false
+        scene.fireTimer=0
+        scene.nextShotAt=0
         scene.state='menu'
+        scene.dummy=null
         scene.draw=()=>{
           const graphics=scene.paint
+          const fx=scene.overlayPaint
           const width=scene.scale.width
           const height=scene.scale.height
           const horizon=height*.43
+          const worldScale=height/620
           graphics.clear()
           graphics.fillGradientStyle(0x182925,0x253a32,0x798e69,0x9da978,1).fillRect(0,0,width,height)
           graphics.fillStyle(0x17211f,.38).fillRect(0,horizon,width,height-horizon)
@@ -211,83 +221,122 @@
             graphics.fillStyle(i%2===0?0x243b34:0x334a39,1).fillCircle(side,y,size)
             graphics.fillStyle(0xa1b77b,.48).fillCircle(side-size*.25,y-size*.3,size*.42)
           }
-          scene.targets.forEach(target=>{
-            if(!target.active)return
-            const scale=1/target.depth
-                                                const lanePosition=target.slot===0 ? 0.2 : target.slot===1 ? 0.5 : 0.8
-            const x=width*lanePosition-scene.playerLane*width*.075/target.depth
-            const y=horizon+height*.22/target.depth
-            const boardWidth=Math.min(width*.19,155*scale)
-            const boardHeight=Math.min(height*.15,83*scale)
-            target.bounds={x,y,width:boardWidth,height:boardHeight}
-            graphics.fillStyle(0x101714,.55).fillEllipse(x+4,y+boardHeight*.35,boardWidth*1.3,boardHeight*.34)
-            graphics.fillStyle(target.kind==='equation'?0xc1f36d:0xf3e1a0,1).fillRoundedRect(x-boardWidth/2,y-boardHeight/2,boardWidth,boardHeight,9)
-            graphics.lineStyle(3,target.kind==='equation'?0x5a8041:0xc08a48,1).strokeRoundedRect(x-boardWidth/2,y-boardHeight/2,boardWidth,boardHeight,9)
-            graphics.fillStyle(0x25342a,.8).fillRoundedRect(x-boardWidth/2+7,y-boardHeight/2+7,boardWidth-14,5,2)
-            target.text.setPosition(x,y+2).setText(target.label).setFontSize(Math.max(15,Math.round(30*scale)))
-          })
-          scene.overlayPaint.clear()
-          if(scene.flashAlpha>0){scene.overlayPaint.fillStyle(0xc1f36d,scene.flashAlpha).fillRect(0,0,width,height)}
-          const crossX=scene.aim.x,crossY=scene.aim.y
-          scene.overlayPaint.lineStyle(2,0xdfffad,.95)
-          scene.overlayPaint.lineBetween(crossX-15,crossY,crossX-5,crossY)
-          scene.overlayPaint.lineBetween(crossX+5,crossY,crossX+15,crossY)
-          scene.overlayPaint.lineBetween(crossX,crossY-15,crossX,crossY-5)
-          scene.overlayPaint.lineBetween(crossX,crossY+5,crossX,crossY+15)
-          scene.overlayPaint.lineStyle(1,0xdfffad,.5).strokeCircle(crossX,crossY,22)
+          const dummy=scene.dummy
+          if(dummy&&dummy.active){
+            const x=dummy.x
+            const scale=worldScale*dummy.scale
+            const groundY=height*.83
+            const headRadius=20*scale
+            const headY=groundY-151*scale
+            const torsoTop=headY+24*scale
+            const torsoBottom=groundY-39*scale
+            const torsoWidth=51*scale
+            dummy.headZone={x,y:headY,radius:headRadius*.78}
+            dummy.bodyZone={left:x-31*scale,right:x+31*scale,top:torsoTop,bottom:torsoBottom}
+            graphics.fillStyle(0x101714,.5).fillEllipse(x,groundY+5*scale,91*scale,15*scale)
+            graphics.lineStyle(15*scale,0x705d46,1)
+            graphics.lineBetween(x-15*scale,torsoBottom-2*scale,x-22*scale,groundY)
+            graphics.lineBetween(x+15*scale,torsoBottom-2*scale,x+22*scale,groundY)
+            graphics.lineStyle(13*scale,0xa88b63,1)
+            graphics.lineBetween(x-torsoWidth*.37,torsoTop+13*scale,x-39*scale,torsoBottom-15*scale)
+            graphics.lineBetween(x+torsoWidth*.37,torsoTop+13*scale,x+39*scale,torsoBottom-15*scale)
+            graphics.fillStyle(dummy.hitFlash>0?0xf5c1a0:0xb99a6c,1)
+            graphics.fillRoundedRect(x-torsoWidth/2,torsoTop,torsoWidth,torsoBottom-torsoTop,9*scale)
+            graphics.lineStyle(3*scale,0x574a39,1).strokeRoundedRect(x-torsoWidth/2,torsoTop,torsoWidth,torsoBottom-torsoTop,9*scale)
+            graphics.fillStyle(0x8c7658,1).fillRoundedRect(x-8*scale,headY+14*scale,16*scale,20*scale,4*scale)
+            graphics.fillStyle(0xd6b88a,1).fillCircle(x,headY,headRadius)
+            graphics.lineStyle(3*scale,0x574a39,1).strokeCircle(x,headY,headRadius)
+            graphics.lineStyle(2*scale,0xff795d,.95).strokeCircle(x,headY,headRadius*.78)
+            graphics.lineStyle(2*scale,0xff795d,.75).strokeCircle(x,headY,headRadius*.42)
+            graphics.lineStyle(2*scale,0xff795d,.7)
+            graphics.lineBetween(x-headRadius*.55,headY,x+headRadius*.55,headY)
+            graphics.lineBetween(x,headY-headRadius*.55,x,headY+headRadius*.55)
+            graphics.lineStyle(2*scale,0xc1f36d,.9).strokeRoundedRect(x-torsoWidth*.38,torsoTop+7*scale,torsoWidth*.76,torsoBottom-torsoTop-14*scale,5*scale)
+            graphics.lineStyle(3*scale,0x17211c,1)
+            graphics.lineBetween(x-7*scale,groundY-5*scale,x-25*scale,groundY)
+            graphics.lineBetween(x+7*scale,groundY-5*scale,x+25*scale,groundY)
+            if(dummy.bodyHits>0){
+              graphics.fillStyle(0x101714,.88).fillRoundedRect(x-25*scale,torsoBottom-24*scale,50*scale,17*scale,5*scale)
+              dummy.bodyLabel.setPosition(x,torsoBottom-15*scale).setText('BODY '+dummy.bodyHits+'/3').setFontSize(Math.max(9,Math.round(10*scale))).setVisible(true)
+            }else dummy.bodyLabel.setVisible(false)
+            if(dummy.hitFlash>0){
+              fx.lineStyle(3,0xff795d,.9).strokeCircle(x,headY,headRadius*1.24)
+            }
+          }else if(dummy){dummy.bodyLabel.setVisible(false)}
+          fx.clear()
+          if(scene.flashAlpha>0){fx.fillStyle(0xc1f36d,scene.flashAlpha).fillRect(0,0,width,height)}
+          const crossX=scene.aim.x
+          const crossY=scene.aim.y-scene.recoil
+          const crossColor=scene.lastHit?0xc1f36d:0xdfffad
+          fx.lineStyle(2,crossColor,.95)
+          fx.lineBetween(crossX-15,crossY,crossX-5,crossY)
+          fx.lineBetween(crossX+5,crossY,crossX+15,crossY)
+          fx.lineBetween(crossX,crossY-15,crossX,crossY-5)
+          fx.lineBetween(crossX,crossY+5,crossX,crossY+15)
+          fx.lineStyle(1,0xdfffad,.5).strokeCircle(crossX,crossY,22+Math.min(scene.recoil*.12,12))
           const gunX=width*.5+scene.playerLane*width*.025
-          const gunY=height+height*.19
-          scene.overlayPaint.fillStyle(0x101713,.94).fillTriangle(gunX-width*.15,gunY,gunX-width*.075,height*.82,gunX+width*.13,gunY)
-          scene.overlayPaint.fillStyle(0x526354,1).fillTriangle(gunX-width*.07,gunY,gunX-width*.026,height*.78,gunX+width*.055,gunY)
-          scene.overlayPaint.fillStyle(0x27362d,1).fillRoundedRect(gunX-width*.035,height*.78,width*.07,height*.19,8)
-          if(scene.state==='menu'){
-            graphics.fillStyle(0x101714,.2).fillRect(0,0,width,height)
+          const gunY=height+height*.19+scene.weaponKick
+          fx.fillStyle(0x101713,.94).fillTriangle(gunX-width*.15,gunY,gunX-width*.075,height*.82+scene.weaponKick,gunX+width*.13,gunY)
+          fx.fillStyle(0x526354,1).fillTriangle(gunX-width*.07,gunY,gunX-width*.026,height*.78+scene.weaponKick,gunX+width*.055,gunY)
+          fx.fillStyle(0x27362d,1).fillRoundedRect(gunX-width*.035,height*.78+scene.weaponKick,width*.07,height*.19,8)
+          if(scene.muzzleFlash>0){
+            fx.fillStyle(0xffd978,scene.muzzleFlash).fillTriangle(gunX-width*.025,height*.76+scene.weaponKick,gunX,height*.68+scene.weaponKick,gunX+width*.025,height*.76+scene.weaponKick)
           }
+          const recoilWidth=110*worldScale
+          const recoilX=width*.5-recoilWidth/2
+          const recoilY=height*.72
+          fx.fillStyle(0x101714,.78).fillRoundedRect(recoilX,recoilY,recoilWidth,7*worldScale,4)
+          fx.fillStyle(scene.recoil>45?0xff795d:0xc1f36d,1).fillRoundedRect(recoilX,recoilY,recoilWidth*Math.min(scene.recoil/80,1),7*worldScale,4)
+          if(scene.state==='menu')graphics.fillStyle(0x101714,.2).fillRect(0,0,width,height)
         }
-        scene.makeRound=()=>{
-          const operation=scene.currentMode==='mixed'?(Math.random()<.5?'addition':'subtraction'):scene.currentMode
-          const max=scene.difficulty==='calm'?12:scene.difficulty==='standard'?30:60
-          let left=Phaser.Math.Between(2,max)
-          let right=Phaser.Math.Between(1,Math.min(max,20))
-          if(operation==='subtraction'&&right>left){const swap=left;left=right;right=swap}
-          const answer=operation==='addition'?left+right:left-right
-          const equation=operation==='addition'?`${left} + ${right}`:`${left} − ${right}`
-          const offsets=Phaser.Utils.Array.Shuffle([-8,-3,4,7,11].filter(n=>answer+n>0))
-          const formulaSlot=Phaser.Math.Between(0,2)
-          const answerSlots=[0,1,2].filter(slot=>slot!==formulaSlot)
-          const correctAnswerSlot=answerSlots[Phaser.Math.Between(0,1)]
-          const decoys=Phaser.Utils.Array.Shuffle([answer+offsets[0],answer+offsets[1]])
-          const targets=[]
-          for(let slot=0;slot<3;slot++){
-            if(slot===formulaSlot){targets.push({kind:'equation',label:equation,slot,depth:Phaser.Math.FloatBetween(.85,1.12),active:true})}
-            else{targets.push({kind:'answer',label:String(slot===correctAnswerSlot?answer:decoys.shift()),slot,depth:Phaser.Math.FloatBetween(.85,1.12),active:true,correct:slot===correctAnswerSlot})}
+        scene.spawnDummy=()=>{
+          if(scene.dummy)scene.dummy.bodyLabel.destroy()
+          const width=scene.scale.width
+          scene.dummy={
+            x:Phaser.Math.Between(Math.round(width*.3),Math.round(width*.7)),
+            direction:Math.random()<.5?-1:1,
+            scale:Phaser.Math.FloatBetween(.92,1.08),
+            bodyHits:0,
+            active:true,
+            hitFlash:0,
+            headZone:null,
+            bodyZone:null,
+            bodyLabel:scene.add.text(0,0,'',{fontFamily:'DM Mono, monospace',fontSize:'10px',fontStyle:'bold',color:'#f7e8c5',backgroundColor:'#101714',padding:{x:4,y:2}}).setOrigin(.5).setDepth(5)
           }
-          scene.selectedKind=null
-          scene.targets.forEach(target=>target.text.destroy())
-          scene.targets=targets.map(target=>{
-            target.text=scene.add.text(0,0,target.label,{fontFamily:'DM Sans, Noto Sans TC, sans-serif',fontSize:'26px',fontStyle:'bold',color:'#1a271d',align:'center'}).setOrigin(.5)
-            return target
-          })
-          scene.message='先射中算式，再命中正確答案'
-          ui.mission.textContent=scene.message
           scene.draw()
         }
         scene.updateHud=()=>{
           ui.score.textContent=numberText(scene.score)
           ui.streak.textContent='× '+String(scene.streak).padStart(2,'0')
-          ui.hits.textContent=String(scene.hits).padStart(2,'0')
-          ui.time.textContent='00:'+String(scene.timeLeft).padStart(2,'0')
-          ui.mission.textContent=scene.message
+          ui.accuracy.textContent=(scene.shots?Math.round(scene.hits/scene.shots*100):100)+'%'
+          const minutes=String(Math.floor(scene.timeLeft/60)).padStart(2,'0')
+          const seconds=String(scene.timeLeft%60).padStart(2,'0')
+          ui.time.textContent=minutes+':'+seconds
+          const speed=Math.round(scene.baseSpeed+scene.elapsedMs*.0028)
+          ui.mission.textContent='靶速 '+String(speed).padStart(3,'0')+'  ·  '+scene.message
         }
         scene.start=()=>{
-          scene.currentMode=ui.operation.value
           scene.difficulty=ui.difficulty.value
-          scene.score=0;scene.streak=0;scene.hits=0
-          scene.timeLeft=scene.difficulty==='rapid'?45:60
-          gameState='playing';scene.state='playing'
+          scene.baseSpeed=scene.difficulty==='calm'?55:scene.difficulty==='standard'?85:115
+          scene.score=0
+          scene.streak=0
+          scene.eliminations=0
+          scene.shots=0
+          scene.hits=0
+          scene.elapsedMs=0
+          scene.timeLeft=60
+          scene.recoil=0
+          scene.weaponKick=0
+          scene.fireHeld=false
+          scene.fireTimer=0
+          scene.nextShotAt=0
+          gameState='playing'
+          scene.state='playing'
           ui.overlay.classList.add('is-hidden')
-          ui.time.textContent='01:00';ui.score.textContent='000000';ui.streak.textContent='× 00';ui.hits.textContent='00'
-          scene.makeRound()
+          scene.message='頭部一發擊倒，身體三發擊倒'
+          if(scene.dummy)scene.dummy.bodyLabel.destroy()
+          scene.dummy=null
+          scene.spawnDummy()
           if(scene.timerEvent)scene.timerEvent.remove(false)
           scene.timerEvent=scene.time.addEvent({delay:1000,loop:true,callback:()=>{
             if(gameState!=='playing')return
@@ -298,70 +347,113 @@
           scene.updateHud()
         }
         scene.finish=()=>{
-          gameState='ended';scene.state='ended'
+          if(gameState!=='playing')return
+          gameState='ended'
+          scene.state='ended'
+          scene.fireHeld=false
+          if(scene.timerEvent)scene.timerEvent.remove(false)
           if(scene.score>bestScore){bestScore=scene.score;localStorage.setItem('aishooterBest',String(bestScore));ui.best.textContent=numberText(bestScore)}
+          const accuracy=scene.shots?Math.round(scene.hits/scene.shots*100):0
           ui.title.textContent='訓練結束'
-          ui.copy.textContent='本回合得分 '+numberText(scene.score)+' 分，命中 '+scene.hits+' 次。再挑戰一次，刷新你的個人最佳紀錄。'
+          ui.copy.textContent='本回合擊倒 '+scene.eliminations+' 個假人，命中率 '+accuracy+'%，得分 '+numberText(scene.score)+'。按住左鍵連射，向下壓槍控制後座力。'
           ui.start.textContent='再次開始'
           ui.overlay.classList.remove('is-hidden')
-          scene.message='訓練完成，準備好就再次出擊'
-          scene.targets.forEach(target=>target.text.setVisible(false))
+          scene.message='時間到，準備好就再次出擊'
+          scene.updateHud()
           scene.draw()
         }
-        scene.fire=pointer=>{
-          if(gameState!=='playing')return
-          scene.aim={x:pointer.x,y:pointer.y}
-          let hit=null
-          for(const target of scene.targets){
-            if(!target.active||!target.bounds)continue
-            const box=target.bounds
-            if(pointer.x>=box.x-box.width/2&&pointer.x<=box.x+box.width/2&&pointer.y>=box.y-box.height/2&&pointer.y<=box.y+box.height/2){hit=target;break}
+        scene.fire=()=>{
+          if(gameState!=='playing'||scene.elapsedMs<scene.nextShotAt)return
+          scene.nextShotAt=scene.elapsedMs+(scene.fireHeld?125:190)
+          scene.shots++
+          scene.recoil=Math.min(82,scene.recoil+(scene.fireHeld?10:8))
+          scene.weaponKick=15
+          scene.muzzleFlash=.9
+          const dummy=scene.dummy
+          const shotX=scene.aim.x
+          const shotY=scene.aim.y-scene.recoil+(scene.fireHeld?10:8)
+          let zone=null
+          if(dummy&&dummy.active&&dummy.headZone){
+            const head=dummy.headZone
+            if(Math.hypot(shotX-head.x,shotY-head.y)<=head.radius)zone='head'
+            else{
+              const body=dummy.bodyZone
+              if(shotX>=body.left&&shotX<=body.right&&shotY>=body.top&&shotY<=body.bottom)zone='body'
+            }
           }
-          if(!hit){scene.message='瞄準靶牌再射擊';scene.updateHud();return}
-          hit.active=false;hit.text.setVisible(false)
-          if(hit.kind==='equation'&&scene.selectedKind==='answer'){
+          if(zone){
             scene.hits++
-            scene.streak++
-            scene.score+=100+Math.min(scene.streak,10)*10
-            scene.message='正確配對  加 '+(100+Math.min(scene.streak,10)*10)+' 分'
-            scene.flashAlpha=.22
-            scene.cameras.main.shake(90,.0015)
-            if(scene.score>bestScore){bestScore=scene.score;ui.best.textContent=numberText(bestScore)}
-            scene.time.delayedCall(380,()=>{if(gameState==='playing')scene.makeRound()})
-          }else if(hit.kind==='equation'){
-            scene.selectedKind='equation'
-            scene.message='公式已鎖定，現在射中相符答案'
-            scene.flashAlpha=.12
-          }else if(hit.correct&&scene.selectedKind==='equation'){
-            scene.hits++
-            scene.streak++
-            scene.score+=100+Math.min(scene.streak,10)*10
-            scene.message='正確配對  加 '+(100+Math.min(scene.streak,10)*10)+' 分'
-            scene.flashAlpha=.22
-            scene.cameras.main.shake(90,.0015)
-            if(scene.score>bestScore){bestScore=scene.score;ui.best.textContent=numberText(bestScore)}
-            scene.time.delayedCall(380,()=>{if(gameState==='playing')scene.makeRound()})
-          }else if(hit.correct){
-            scene.selectedKind='answer'
-            scene.message='答案已鎖定，現在射中對應算式'
-            scene.flashAlpha=.12
-          }else{
-            scene.score=Math.max(0,scene.score-25)
-            scene.streak=0
-            scene.selectedKind=null
-            scene.message='答案不相符  扣 25 分，重新瞄準'
+            scene.lastHit=true
             scene.flashAlpha=.08
+            scene.cameras.main.shake(55,.001)
+            if(zone==='head'){
+              scene.message='爆頭命中，一發擊倒  +150'
+              scene.score+=150+Math.min(scene.streak,10)*15
+              scene.streak++
+              scene.eliminations++
+              dummy.active=false
+              dummy.bodyLabel.setVisible(false)
+              scene.time.delayedCall(260,()=>{if(gameState==='playing')scene.spawnDummy()})
+            }else{
+              dummy.bodyHits++
+              dummy.hitFlash=130
+              if(dummy.bodyHits>=3){
+                scene.message='身體命中三發，目標擊倒  +75'
+                scene.score+=75+Math.min(scene.streak,10)*10
+                scene.streak++
+                scene.eliminations++
+                dummy.active=false
+                dummy.bodyLabel.setVisible(false)
+                scene.time.delayedCall(260,()=>{if(gameState==='playing')scene.spawnDummy()})
+              }else scene.message='身體命中 '+dummy.bodyHits+'/3，再補幾發'
+            }
+          }else{
+            scene.lastHit=false
+            scene.streak=0
+            scene.message='未命中，修正瞄準並壓低後座力'
           }
           scene.updateHud()
           scene.draw()
-          scene.tweens.add({targets:scene,flashAlpha:0,duration:220,onUpdate:scene.draw})
         }
         scene.input.on('pointermove',pointer=>{scene.aim={x:pointer.x,y:pointer.y};scene.draw()})
-        scene.input.on('pointerdown',scene.fire)
+        scene.input.on('pointerdown',pointer=>{
+          scene.aim={x:pointer.x,y:pointer.y}
+          scene.fireHeld=true
+          scene.fireTimer=0
+          scene.fire()
+        })
+        scene.input.on('pointerup',()=>{scene.fireHeld=false;scene.fireTimer=0})
+        scene.input.on('pointerupoutside',()=>{scene.fireHeld=false;scene.fireTimer=0})
         scene.input.keyboard.on('keydown',event=>{
           if(event.key==='a'||event.key==='A'||event.key==='ArrowLeft')scene.playerLane=Math.max(-2,scene.playerLane-1)
           if(event.key==='d'||event.key==='D'||event.key==='ArrowRight')scene.playerLane=Math.min(2,scene.playerLane+1)
           scene.draw()
+        })
+        scene.events.on('update',(time,delta)=>{
+          if(gameState!=='playing')return
+          const step=Math.min(delta,60)
+          scene.elapsedMs+=step
+          const dummy=scene.dummy
+          if(dummy&&dummy.active){
+            const speed=scene.baseSpeed+scene.elapsedMs*.0028
+            dummy.x+=dummy.direction*speed*step/1000*scene.scale.width/1100
+            const left=scene.scale.width*.16
+            const right=scene.scale.width*.84
+            if(dummy.x<left){dummy.x=left;dummy.direction=1}
+            if(dummy.x>right){dummy.x=right;dummy.direction=-1}
+            dummy.hitFlash=Math.max(0,dummy.hitFlash-step)
+          }
+          scene.recoil=Math.max(0,scene.recoil-step*.035)
+          scene.weaponKick=Math.max(0,scene.weaponKick-step*.065)
+          scene.muzzleFlash=Math.max(0,scene.muzzleFlash-step*.006)
+          scene.flashAlpha=Math.max(0,scene.flashAlpha-step*.003)
+          if(scene.fireHeld){
+            scene.fireTimer-=step
+            if(scene.fireTimer<=0){scene.fire();scene.fireTimer=125}
+          }
+          scene.lastHit=false
+          scene.draw()
+          if(Math.floor(scene.elapsedMs/250)!==Math.floor((scene.elapsedMs-step)/250))scene.updateHud()
         })
         scene.scale.on('resize',scene.draw)
         scene.draw()
@@ -369,13 +461,10 @@
     }
     const phaserGame=new Phaser.Game(gameConfig)
     ui.start.addEventListener('click',()=>{
-      if(gameScene){
-        ui.title.textContent='進入數學射擊訓練'
-        ui.copy.textContent='用第一人稱視角瞄準靶場。先射中公式，再射中相符的答案。答對連續得分，答錯會扣分。'
-        ui.start.textContent='開始訓練'
-        ui.controls.style.display='grid'
-        gameScene.start()
-      }
+      ui.title.textContent='進入精準射擊訓練'
+      ui.copy.textContent='限時 60 秒挑戰移動假人靶。頭部一發擊倒，身體要命中三發。靶速會隨時間增加，按住左鍵連射時記得向下壓槍。'
+      ui.start.textContent='開始訓練'
+      gameScene.start()
     })
     window.addEventListener('keydown',event=>{if(event.key==='Escape'&&gameState==='playing')gameScene.finish()})
   </script>
