@@ -118,7 +118,7 @@
       <div class="game-ui" aria-hidden="true">
         <div class="ui-top">
           <div class="readout"><span>SCORE</span><strong id="score-display">000000</strong></div>
-          <div class="readouts-right"><div class="readout"><span>TIME</span><strong id="time-display">01:00</strong></div><div class="readout"><span>STREAK</span><strong id="streak-display">× 00</strong></div><div class="readout"><span>ACCURACY</span><strong id="accuracy-display">100%</strong></div></div>
+          <div class="readouts-right"><div class="readout"><span>TIME</span><strong id="time-display">01:00</strong></div><div class="readout"><span>STREAK</span><strong id="streak-display">× 00</strong></div><div class="readout"><span>ACCURACY</span><strong id="accuracy-display">--</strong></div></div>
         </div>
         <div class="ui-bottom"><div class="mission-box"><span>MISSION</span><strong id="mission-display">頭部一發擊倒，身體三發擊倒</strong></div><div class="weapon-label">HOLD TO FIRE&nbsp;&nbsp; PULL DOWN TO CONTROL RECOIL</div></div>
       </div>
@@ -308,7 +308,7 @@
         scene.updateHud=()=>{
           ui.score.textContent=numberText(scene.score)
           ui.streak.textContent='× '+String(scene.streak).padStart(2,'0')
-          ui.accuracy.textContent=(scene.shots?Math.round(scene.hits/scene.shots*100):100)+'%'
+          ui.accuracy.textContent=scene.shots?Math.round(scene.hits/scene.shots*100)+'%':'--'
           const minutes=String(Math.floor(scene.timeLeft/60)).padStart(2,'0')
           const seconds=String(scene.timeLeft%60).padStart(2,'0')
           ui.time.textContent=minutes+':'+seconds
