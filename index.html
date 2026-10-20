@@ -112,7 +112,7 @@
     </div>
   </header>
   <main id="top" class="page-gutter">
-    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;MATH RANGE</div><h1>算式配對，精準出擊。</h1></div><div class="topline-note">一輪出現多個假人，身上各有算式或答案。靶子不會移動，但遠近與大小每輪隨機。命中正確算式與答案組合才能得分。</div></div>
+    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;MATH RANGE</div><h1>算式配對，精準出擊。</h1></div><div class="topline-note">綠牌是算式，金牌是答案。一輪出現多個靜止假人，遠近與大小每輪隨機。命中正確配對才能得分。</div></div>
     <section class="game-panel" aria-label="AIshooter 數學配對射擊訓練場">
       <div class="game-frame" id="game"></div>
       <div class="game-ui" aria-hidden="true">
@@ -126,7 +126,7 @@
         <div class="launch-card">
           <div class="launch-kicker">AIshooter&nbsp; / &nbsp;FIELD TRAINING</div>
           <h2 id="overlay-title">進入數學配對訓練</h2>
-          <p id="overlay-copy">限時 60 秒挑戰靜止假人靶。每個假人代表一道算式或一個答案，射中正確配對才能得分。頭部一發擊倒，身體要命中三發。</p>
+          <p id="overlay-copy">限時 60 秒挑戰靜止假人靶。綠牌是假人算式，金牌是假人答案。射中正確配對才能得分。頭部一發擊倒，身體要命中三發。</p>
           <div class="launch-controls" id="launch-controls">
             <div><label for="difficulty-mode">題目難度</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
           </div>
@@ -235,6 +235,7 @@
             const plaqueY=headY-headRadius-19*scale
             target.headZone={x,y:headY,radius:headRadius*.78}
             target.bodyZone={left:x-31*scale,right:x+31*scale,top:torsoTop,bottom:torsoBottom}
+            target.plaqueZone={left:x-plaqueWidth/2,right:x+plaqueWidth/2,top:plaqueY-plaqueHeight/2,bottom:plaqueY+plaqueHeight/2}
             graphics.fillStyle(0x101714,.5).fillEllipse(x,groundY+5*scale,91*scale,15*scale)
             graphics.lineStyle(15*scale,0x705d46,1)
             graphics.lineBetween(x-15*scale,torsoBottom-2*scale,x-22*scale,groundY)
@@ -296,12 +297,16 @@
           scene.targets.forEach(target=>{target.text.destroy();target.bodyLabel.destroy()})
           const max=scene.difficulty==='calm'?12:scene.difficulty==='standard'?30:60
           const pairs=[]
-          for(let pairId=0;pairId<4;pairId++){
+          const usedAnswers=new Set()
+          while(pairs.length<4){
+            const pairId=pairs.length
             const operation=Math.random()<.5?'addition':'subtraction'
             let left=Phaser.Math.Between(2,max)
             let right=Phaser.Math.Between(1,Math.min(max,20))
             if(operation==='subtraction'&&right>left){const swap=left;left=right;right=swap}
             const answer=operation==='addition'?left+right:left-right
+            if(usedAnswers.has(answer))continue
+            usedAnswers.add(answer)
             const expression=operation==='addition'?left+' + '+right:left+' − '+right
             pairs.push({pairId,expression,answer})
           }
@@ -404,7 +409,8 @@
             const head=target.headZone
             if(Math.hypot(shotX-head.x,shotY-head.y)<=head.radius){hitTarget=target;zone='head';break}
             const body=target.bodyZone
-            if(shotX>=body.left&&shotX<=body.right&&shotY>=body.top&&shotY<=body.bottom){hitTarget=target;zone='body';break}
+            const plaque=target.plaqueZone
+            if((shotX>=body.left&&shotX<=body.right&&shotY>=body.top&&shotY<=body.bottom)||(shotX>=plaque.left&&shotX<=plaque.right&&shotY>=plaque.top&&shotY<=plaque.bottom)){hitTarget=target;zone='body';break}
           }
           if(hitTarget){
             scene.hits++
@@ -509,7 +515,7 @@
     const phaserGame=new Phaser.Game(gameConfig)
     ui.start.addEventListener('click',()=>{
       ui.title.textContent='進入數學配對訓練'
-      ui.copy.textContent='限時 60 秒挑戰靜止假人靶。每個假人代表一道算式或一個答案，射中正確配對才能得分。頭部一發擊倒，身體要命中三發。'
+      ui.copy.textContent='限時 60 秒挑戰靜止假人靶。綠牌是假人算式，金牌是假人答案。射中正確配對才能得分。頭部一發擊倒，身體要命中三發。'
       ui.start.textContent='開始訓練'
       gameScene.start()
     })
