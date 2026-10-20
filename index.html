@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101714">
+  <meta name="description" content="AIshooter 是一款把加減法練習變成第一人稱射擊挑戰的數學遊戲。">
+  <title>AIshooter｜數學射擊訓練場</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--night:#101714;--panel:#18221d;--panel2:#202c25;--line:#34443a;--lime:#c1f36d;--orange:#ff795d;--paper:#e9eee3;--soft:#9baa9d}
+    *{box-sizing:border-box}
+    html{scrollbar-gutter:stable}
+    body{margin:0;min-height:100vh;background:var(--night);color:var(--paper);font-family:'DM Sans','Noto Sans TC',sans-serif;overflow-y:scroll}
+    .page-gutter{padding-left:18px;padding-right:18px}
+    .site-header{min-height:76px;border-bottom:1px solid #28352e;display:flex;align-items:center;justify-content:space-between;gap:20px;background:#101714}
+    .header-inner{width:100%;max-width:1440px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px;color:var(--paper);text-decoration:none;font-weight:900;font-size:19px;letter-spacing:-.06em}
+    .brand-icon{width:34px;height:34px;border-radius:10px;background:var(--lime);color:#1b271b;display:grid;place-items:center;font-size:17px}
+    .brand-name{line-height:1}
+    .brand-name small{display:block;font-family:'DM Mono',monospace;color:#8c9b8f;font-size:8px;letter-spacing:.12em;margin-top:5px;font-weight:500}
+    .header-right{display:flex;align-items:center;gap:22px}
+    .system-status{display:flex;align-items:center;gap:8px;color:#aab6ab;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px #c1f36d80}
+    .header-score{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:9px 12px;color:#aeb9af;font-family:'DM Mono',monospace;font-size:10px}
+    .header-score strong{color:var(--lime);font-size:14px;font-weight:500}
+    main{max-width:1440px;margin:auto;padding-top:26px;padding-bottom:28px}
+    .topline{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:0 0 15px}
+    .eyebrow{font-family:'DM Mono',monospace;color:var(--lime);font-size:10px;letter-spacing:.14em;margin-bottom:8px}
+    h1{font-size:clamp(27px,4vw,42px);font-weight:900;letter-spacing:-.065em;line-height:1.1;margin:0}
+    .topline-note{max-width:390px;text-align:right;color:#95a398;font-size:12px;line-height:1.65}
+    .game-panel{position:relative;border:1px solid #3a4a3d;border-radius:16px;overflow:hidden;background:#263a34;box-shadow:0 25px 90px #0006}
+    .game-frame{width:100%;height:min(62vw,610px);min-height:390px;position:relative;overflow:hidden;background:#283b35}
+    .game-frame canvas{display:block;width:100%;height:100%;cursor:crosshair}
+    .game-overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(90deg,#101714dc,#10171466 60%,#101714b8);z-index:4;padding:22px;transition:opacity .22s,visibility .22s}
+    .game-overlay.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .launch-card{width:min(510px,100%);padding:28px 30px;border:1px solid #607252a8;border-radius:16px;background:#111a16eF;box-shadow:0 20px 80px #0007;backdrop-filter:blur(10px)}
+    .launch-kicker{font-family:'DM Mono',monospace;font-size:10px;color:var(--lime);letter-spacing:.14em;margin-bottom:12px}
+    .launch-card h2{font-size:clamp(29px,5vw,46px);letter-spacing:-.07em;font-weight:900;line-height:1.02;margin:0 0 12px}
+    .launch-card p{font-size:13px;color:#b2beb2;line-height:1.8;margin:0 0 20px;max-width:430px}
+    .launch-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;margin-bottom:16px}
+    .launch-controls label{display:block;font-size:10px;color:#9baa9d;margin:0 0 7px}
+    .form-select{background-color:#202b24;color:#e9eee3;border-color:#425044;font-size:12px;border-radius:8px;padding-top:10px;padding-bottom:10px}
+    .form-select:focus{border-color:var(--lime);box-shadow:0 0 0 .18rem #c1f36d26}
+    .btn-launch{width:100%;border:0;border-radius:9px;background:var(--lime);color:#172115;padding:13px 18px;font-size:13px;font-weight:900;letter-spacing:.02em;transition:transform .18s,background .18s}
+    .btn-launch:hover{background:#d3ff8e;transform:translateY(-2px)}
+    .overlay-hint{font-size:10px;color:#87958a;line-height:1.7;margin-top:14px}
+    .game-ui{pointer-events:none;position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:16px 18px}
+    .ui-top{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+    .readout{min-width:116px;border:1px solid #c1f36d51;background:#101714c9;border-radius:9px;padding:9px 12px;backdrop-filter:blur(5px)}
+    .readout span{display:block;font-family:'DM Mono',monospace;color:#9eae9e;font-size:8px;letter-spacing:.12em}
+    .readout strong{display:block;color:var(--lime);font-family:'DM Mono',monospace;font-size:20px;font-weight:500;line-height:1.2;margin-top:4px}
+    .readouts-right{display:flex;gap:8px}
+    .readouts-right .readout{min-width:92px}
+    .readouts-right .readout strong{font-size:16px}
+    .ui-bottom{display:flex;justify-content:space-between;align-items:end;gap:18px}
+    .mission-box{max-width:350px;border:1px solid #d4e7c133;background:#101714d0;border-radius:10px;padding:11px 14px;backdrop-filter:blur(5px)}
+    .mission-box span{font-family:'DM Mono',monospace;color:var(--lime);font-size:8px;letter-spacing:.12em}
+    .mission-box strong{display:block;font-size:15px;line-height:1.4;margin-top:5px}
+    .weapon-label{color:#cfdbcb;background:#101714a8;border-radius:8px;padding:8px 11px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em}
+    .game-footer{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:12px;color:#839186;font-size:10px}
+    .controls{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+    .control-key{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:22px;border:1px solid #46564a;border-radius:5px;padding:0 6px;color:#d4dfd3;font-family:'DM Mono',monospace;font-size:9px;margin-right:4px}
+    .footer-state{font-family:'DM Mono',monospace;color:#a5b2a6;letter-spacing:.05em}
+    .footer-state b{color:var(--lime);font-weight:500}
+    .mobile-start{display:none}
+    @media(max-width:760px){
+      .page-gutter{padding-left:12px;padding-right:12px}
+      .site-header{min-height:64px}
+      .header-right{gap:9px}
+      .system-status{font-size:8px;gap:5px}
+      .header-score{padding:7px 9px}
+      main{padding-top:20px}
+      .topline{display:block}
+      .topline-note{text-align:left;margin-top:9px;font-size:11px}
+      .game-frame{height:68vh;min-height:420px;max-height:610px}
+      .game-ui{padding:11px}
+      .readout{min-width:94px;padding:7px 9px}
+      .readout strong{font-size:17px}
+      .readouts-right{gap:5px}
+      .readouts-right .readout{min-width:73px}
+      .readouts-right .readout strong{font-size:14px}
+      .mission-box{max-width:260px;padding:9px 10px}
+      .mission-box strong{font-size:13px}
+      .weapon-label{display:none}
+      .game-footer{align-items:flex-start;flex-direction:column;gap:8px}
+      .controls{gap:9px}
+    }
+    @media(max-width:460px){
+      .brand{font-size:16px}
+      .brand-icon{width:30px;height:30px}
+      .system-status{display:none}
+      .launch-card{padding:22px 19px}
+      .launch-controls{grid-template-columns:1fr;gap:11px}
+      .game-frame{min-height:450px}
+      .readouts-right .readout:first-child{display:none}
+      .mission-box{max-width:210px}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header page-gutter">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="AIshooter 首頁"><span class="brand-icon">✳</span><span class="brand-name">AIshooter<small>MATH RANGE</small></span></a>
+      <div class="header-right"><div class="system-status"><span class="status-dot"></span>訓練場系統待命</div><div class="header-score">個人最佳 <strong id="best-score">000000</strong></div></div>
+    </div>
+  </header>
+  <main id="top" class="page-gutter">
+    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;ARITHMETIC TRAINING</div><h1>算得快，瞄得準。</h1></div><div class="topline-note">鎖定算式，找出正確答案。每一次命中都讓你的心算更快一點。</div></div>
+    <section class="game-panel" aria-label="AIshooter 加減法射擊遊戲">
+      <div class="game-frame" id="game"></div>
+      <div class="game-ui" aria-hidden="true">
+        <div class="ui-top">
+          <div class="readout"><span>SCORE</span><strong id="score-display">000000</strong></div>
+          <div class="readouts-right"><div class="readout"><span>TIME</span><strong id="time-display">01:00</strong></div><div class="readout"><span>STREAK</span><strong id="streak-display">× 00</strong></div><div class="readout"><span>HITS</span><strong id="hits-display">00</strong></div></div>
+        </div>
+        <div class="ui-bottom"><div class="mission-box"><span>MISSION</span><strong id="mission-display">先射中算式，再命中正確答案</strong></div><div class="weapon-label">MOUSE AIM&nbsp;&nbsp; CLICK TO FIRE</div></div>
+      </div>
+      <div class="game-overlay" id="overlay">
+        <div class="launch-card">
+          <div class="launch-kicker">AIshooter&nbsp; / &nbsp;FIELD TRAINING</div>
+          <h2 id="overlay-title">進入數學射擊訓練</h2>
+          <p id="overlay-copy">用第一人稱視角瞄準靶場。先射中公式，再射中相符的答案。答對連續得分，答錯會扣分。</p>
+          <div class="launch-controls" id="launch-controls">
+            <div><label for="operation-mode">訓練內容</label><select class="form-select" id="operation-mode"><option value="mixed">加法與減法</option><option value="addition">加法</option><option value="subtraction">減法</option></select></div>
+            <div><label for="difficulty-mode">挑戰難度</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
+          </div>
+          <button class="btn-launch" id="start-button" type="button">開始訓練</button>
+          <div class="overlay-hint">滑鼠移動瞄準並點擊射擊<br>使用 A 與 D 或方向鍵左右移動</div>
+        </div>
+      </div>
+    </section>
+    <div class="game-footer"><div class="controls"><span><kbd class="control-key">A</kbd><kbd class="control-key">D</kbd>移動</span><span><kbd class="control-key">滑鼠</kbd>瞄準</span><span><kbd class="control-key">左鍵</kbd>射擊</span></div><div class="footer-state"><b>LIVE</b>&nbsp; 加減法反應訓練</div></div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script>
+    const ui={
+      overlay:document.getElementById('overlay'),
+      title:document.getElementById('overlay-title'),
+      copy:document.getElementById('overlay-copy'),
+      start:document.getElementById('start-button'),
+      controls:document.getElementById('launch-controls'),
+      operation:document.getElementById('operation-mode'),
+      difficulty:document.getElementById('difficulty-mode'),
+      score:document.getElementById('score-display'),
+      time:document.getElementById('time-display'),
+      streak:document.getElementById('streak-display'),
+      hits:document.getElementById('hits-display'),
+      best:document.getElementById('best-score'),
+      mission:document.getElementById('mission-display')
+    }
+    const numberText=value=>String(value).padStart(6,'0')
+    let bestScore=Number(localStorage.getItem('aishooterBest')||0)
+    ui.best.textContent=numberText(bestScore)
+    let gameScene=null
+    let gameState='menu'
+    const gameConfig={
+      type:Phaser.AUTO,
+      parent:'game',
+      width:1100,
+      height:620,
+      backgroundColor:'#263a34',
+      antialias:true,
+      scale:{mode:Phaser.Scale.RESIZE,autoCenter:Phaser.Scale.CENTER_BOTH},
+      input:{activePointers:1},
+      scene:{create(){
+        const scene=this
+        gameScene=scene
+        scene.paint=scene.add.graphics()
+        scene.overlayPaint=scene.add.graphics()
+        scene.targetTexts=[]
+        scene.targets=[]
+        scene.score=0
+        scene.streak=0
+        scene.hits=0
+        scene.timeLeft=60
+        scene.currentMode='mixed'
+        scene.difficulty='calm'
+        scene.playerLane=0
+        scene.message='先射中算式，再命中正確答案'
+        scene.aim={x:scene.scale.width/2,y:scene.scale.height/2}
+        scene.flashAlpha=0
+        scene.state='menu'
+        scene.draw=()=>{
+          const graphics=scene.paint
+          const width=scene.scale.width
+          const height=scene.scale.height
+          const horizon=height*.43
+          graphics.clear()
+          graphics.fillGradientStyle(0x182925,0x253a32,0x798e69,0x9da978,1).fillRect(0,0,width,height)
+          graphics.fillStyle(0x17211f,.38).fillRect(0,horizon,width,height-horizon)
+          graphics.fillStyle(0xb6c399,.22).fillTriangle(0,horizon,width*.5,horizon-32,width,horizon)
+          graphics.fillStyle(0x18231f,.76).fillRect(0,horizon,width,5)
+          graphics.lineStyle(1,0xe0edc4,.23)
+          for(let i=0;i<8;i++){
+            const perspective=i/7
+            const y=horizon+perspective*perspective*(height-horizon)
+            graphics.lineBetween(0,y,width,y)
+          }
+          for(let i=-5;i<=5;i++){
+            const x=width*.5+i*width*.1
+            graphics.lineBetween(width*.5+(x-width*.5)*.06,horizon,x,height)
+          }
+          for(let i=0;i<9;i++){
+            const side=i%2===0?24:width-24
+            const y=horizon-20-i*height*.045
+            const size=9+i*2
+            graphics.fillStyle(i%2===0?0x243b34:0x334a39,1).fillCircle(side,y,size)
+            graphics.fillStyle(0xa1b77b,.48).fillCircle(side-size*.25,y-size*.3,size*.42)
+          }
+          scene.targets.forEach(target=>{
+            if(!target.active)return
+            const scale=1/target.depth
+            const lanePosition=target.slot===0?.2:target.slot===1?.5:target.slot===2?.8
+            const x=width*lanePosition-scene.playerLane*width*.075/target.depth
+            const y=horizon+height*.32/target.depth
+            const boardWidth=Math.min(width*.19,155*scale)
+            const boardHeight=Math.min(height*.15,83*scale)
+            target.bounds={x,y,width:boardWidth,height:boardHeight}
+            graphics.fillStyle(0x101714,.55).fillEllipse(x+4,y+boardHeight*.35,boardWidth*1.3,boardHeight*.34)
+            graphics.fillStyle(target.kind==='equation'?0xc1f36d:0xf3e1a0,1).fillRoundedRect(x-boardWidth/2,y-boardHeight/2,boardWidth,boardHeight,9)
+            graphics.lineStyle(3,target.kind==='equation'?0x5a8041:0xc08a48,1).strokeRoundedRect(x-boardWidth/2,y-boardHeight/2,boardWidth,boardHeight,9)
+            graphics.fillStyle(0x25342a,.8).fillRoundedRect(x-boardWidth/2+7,y-boardHeight/2+7,boardWidth-14,5,2)
+            target.text.setPosition(x,y+2).setText(target.label).setFontSize(Math.max(15,Math.round(30*scale)))
+          })
+          scene.overlayPaint.clear()
+          if(scene.flashAlpha>0){scene.overlayPaint.fillStyle(0xc1f36d,scene.flashAlpha).fillRect(0,0,width,height)}
+          const crossX=scene.aim.x,crossY=scene.aim.y
+          scene.overlayPaint.lineStyle(2,0xdfffad,.95)
+          scene.overlayPaint.lineBetween(crossX-15,crossY,crossX-5,crossY)
+          scene.overlayPaint.lineBetween(crossX+5,crossY,crossX+15,crossY)
+          scene.overlayPaint.lineBetween(crossX,crossY-15,crossX,crossY-5)
+          scene.overlayPaint.lineBetween(crossX,crossY+5,crossX,crossY+15)
+          scene.overlayPaint.lineStyle(1,0xdfffad,.5).strokeCircle(crossX,crossY,22)
+          const gunX=width*.5+scene.playerLane*width*.025
+          const gunY=height+height*.19
+          scene.overlayPaint.fillStyle(0x101713,.94).fillTriangle(gunX-width*.15,gunY,gunX-width*.075,height*.82,gunX+width*.13,gunY)
+          scene.overlayPaint.fillStyle(0x526354,1).fillTriangle(gunX-width*.07,gunY,gunX-width*.026,height*.78,gunX+width*.055,gunY)
+          scene.overlayPaint.fillStyle(0x27362d,1).fillRoundedRect(gunX-width*.035,height*.78,width*.07,height*.19,8)
+          if(scene.state==='menu'){
+            graphics.fillStyle(0x101714,.2).fillRect(0,0,width,height)
+          }
+        }
+        scene.makeRound=()=>{
+          const operation=scene.currentMode==='mixed'?(Math.random()<.5?'addition':'subtraction'):scene.currentMode
+          const max=scene.difficulty==='calm'?12:scene.difficulty==='standard'?30:60
+          let left=Phaser.Math.Between(2,max)
+          let right=Phaser.Math.Between(1,Math.min(max,20))
+          if(operation==='subtraction'&&right>left){const swap=left;left=right;right=swap}
+          const answer=operation==='addition'?left+right:left-right
+          const equation=operation==='addition'?`${left} + ${right}`:`${left} − ${right}`
+          const offsets=Phaser.Utils.Array.Shuffle([-8,-3,4,7,11].filter(n=>answer+n>0))
+          const formulaSlot=Phaser.Math.Between(0,2)
+          const answerSlots=[0,1,2].filter(slot=>slot!==formulaSlot)
+          const correctAnswerSlot=answerSlots[Phaser.Math.Between(0,1)]
+          const decoys=Phaser.Utils.Array.Shuffle([answer+offsets[0],answer+offsets[1]])
+          const targets=[]
+          for(let slot=0;slot<3;slot++){
+            if(slot===formulaSlot){targets.push({kind:'equation',label:equation,slot,depth:Phaser.Math.FloatBetween(.85,1.12),active:true})}
+            else{targets.push({kind:'answer',label:String(slot===correctAnswerSlot?answer:decoys.shift()),slot,depth:Phaser.Math.FloatBetween(.85,1.12),active:true,correct:slot===correctAnswerSlot})}
+          }
+          scene.selectedKind=null
+          scene.targets.forEach(target=>target.text.destroy())
+          scene.targets=targets.map(target=>{
+            target.text=scene.add.text(0,0,target.label,{fontFamily:'DM Sans, Noto Sans TC, sans-serif',fontSize:'26px',fontStyle:'bold',color:'#1a271d',align:'center'}).setOrigin(.5)
+            return target
+          })
+          scene.message='先射中算式，再命中正確答案'
+          ui.mission.textContent=scene.message
+          scene.draw()
+        }
+        scene.updateHud=()=>{
+          ui.score.textContent=numberText(scene.score)
+          ui.streak.textContent='× '+String(scene.streak).padStart(2,'0')
+          ui.hits.textContent=String(scene.hits).padStart(2,'0')
+          ui.time.textContent='00:'+String(scene.timeLeft).padStart(2,'0')
+          ui.mission.textContent=scene.message
+        }
+        scene.start=()=>{
+          scene.currentMode=ui.operation.value
+          scene.difficulty=ui.difficulty.value
+          scene.score=0;scene.streak=0;scene.hits=0
+          scene.timeLeft=scene.difficulty==='rapid'?45:60
+          gameState='playing';scene.state='playing'
+          ui.overlay.classList.add('is-hidden')
+          ui.time.textContent='01:00';ui.score.textContent='000000';ui.streak.textContent='× 00';ui.hits.textContent='00'
+          scene.makeRound()
+          if(scene.timerEvent)scene.timerEvent.remove(false)
+          scene.timerEvent=scene.time.addEvent({delay:1000,loop:true,callback:()=>{
+            if(gameState!=='playing')return
+            scene.timeLeft--
+            scene.updateHud()
+            if(scene.timeLeft<=0)scene.finish()
+          }})
+          scene.updateHud()
+        }
+        scene.finish=()=>{
+          gameState='ended';scene.state='ended'
+          if(scene.score>bestScore){bestScore=scene.score;localStorage.setItem('aishooterBest',String(bestScore));ui.best.textContent=numberText(bestScore)}
+          ui.title.textContent='訓練結束'
+          ui.copy.textContent='本回合得分 '+numberText(scene.score)+' 分，命中 '+scene.hits+' 次。再挑戰一次，刷新你的個人最佳紀錄。'
+          ui.start.textContent='再次開始'
+          ui.overlay.classList.remove('is-hidden')
+          scene.message='訓練完成，準備好就再次出擊'
+          scene.targets.forEach(target=>target.text.setVisible(false))
+          scene.draw()
+        }
+        scene.fire=pointer=>{
+          if(gameState!=='playing')return
+          scene.aim={x:pointer.x,y:pointer.y}
+          let hit=null
+          for(const target of scene.targets){
+            if(!target.active||!target.bounds)continue
+            const box=target.bounds
+            if(pointer.x>=box.x-box.width/2&&pointer.x<=box.x+box.width/2&&pointer.y>=box.y-box.height/2&&pointer.y<=box.y+box.height/2){hit=target;break}
+          }
+          if(!hit){scene.message='瞄準靶牌再射擊';scene.updateHud();return}
+          hit.active=false;hit.text.setVisible(false)
+          if(hit.kind==='equation'&&scene.selectedKind==='answer'){
+            scene.hits++
+            scene.streak++
+            scene.score+=100+Math.min(scene.streak,10)*10
+            scene.message='正確配對  加 '+(100+Math.min(scene.streak,10)*10)+' 分'
+            scene.flashAlpha=.22
+            scene.cameras.main.shake(90,.0015)
+            if(scene.score>bestScore){bestScore=scene.score;ui.best.textContent=numberText(bestScore)}
+            scene.time.delayedCall(380,()=>{if(gameState==='playing')scene.makeRound()})
+          }else if(hit.kind==='equation'){
+            scene.selectedKind='equation'
+            scene.message='公式已鎖定，現在射中相符答案'
+            scene.flashAlpha=.12
+          }else if(hit.correct&&scene.selectedKind==='equation'){
+            scene.hits++
+            scene.streak++
+            scene.score+=100+Math.min(scene.streak,10)*10
+            scene.message='正確配對  加 '+(100+Math.min(scene.streak,10)*10)+' 分'
+            scene.flashAlpha=.22
+            scene.cameras.main.shake(90,.0015)
+            if(scene.score>bestScore){bestScore=scene.score;ui.best.textContent=numberText(bestScore)}
+            scene.time.delayedCall(380,()=>{if(gameState==='playing')scene.makeRound()})
+          }else if(hit.correct){
+            scene.selectedKind='answer'
+            scene.message='答案已鎖定，現在射中對應算式'
+            scene.flashAlpha=.12
+          }else{
+            scene.score=Math.max(0,scene.score-25)
+            scene.streak=0
+            scene.selectedKind=null
+            scene.message='答案不相符  扣 25 分，重新瞄準'
+            scene.flashAlpha=.08
+          }
+          scene.updateHud()
+          scene.draw()
+          scene.tweens.add({targets:scene,flashAlpha:0,duration:220,onUpdate:scene.draw})
+        }
+        scene.input.on('pointermove',pointer=>{scene.aim={x:pointer.x,y:pointer.y};scene.draw()})
+        scene.input.on('pointerdown',scene.fire)
+        scene.input.keyboard.on('keydown',event=>{
+          if(event.key==='a'||event.key==='A'||event.key==='ArrowLeft')scene.playerLane=Math.max(-2,scene.playerLane-1)
+          if(event.key==='d'||event.key==='D'||event.key==='ArrowRight')scene.playerLane=Math.min(2,scene.playerLane+1)
+          scene.draw()
+        })
+        scene.scale.on('resize',scene.draw)
+        scene.draw()
+      }}
+    }
+    const phaserGame=new Phaser.Game(gameConfig)
+    ui.start.addEventListener('click',()=>{
+      if(gameScene){
+        ui.title.textContent='進入數學射擊訓練'
+        ui.copy.textContent='用第一人稱視角瞄準靶場。先射中公式，再射中相符的答案。答對連續得分，答錯會扣分。'
+        ui.start.textContent='開始訓練'
+        ui.controls.style.display='grid'
+        gameScene.start()
+      }
+    })
+    window.addEventListener('keydown',event=>{if(event.key==='Escape'&&gameState==='playing')gameScene.finish()})
+  </script>
+</body>
+</html>
