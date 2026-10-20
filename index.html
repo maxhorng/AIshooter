@@ -216,7 +216,7 @@
             const scale=1/target.depth
                                                 const lanePosition=target.slot===0 ? 0.2 : target.slot===1 ? 0.5 : 0.8
             const x=width*lanePosition-scene.playerLane*width*.075/target.depth
-            const y=horizon+height*.32/target.depth
+            const y=horizon+height*.22/target.depth
             const boardWidth=Math.min(width*.19,155*scale)
             const boardHeight=Math.min(height*.15,83*scale)
             target.bounds={x,y,width:boardWidth,height:boardHeight}
