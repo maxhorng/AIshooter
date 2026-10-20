@@ -214,7 +214,7 @@
           scene.targets.forEach(target=>{
             if(!target.active)return
             const scale=1/target.depth
-            const lanePosition=target.slot===0?.2:target.slot===1?.5:target.slot===2?.8
+                                                const lanePosition=target.slot===0 ? 0.2 : target.slot===1 ? 0.5 : 0.8
             const x=width*lanePosition-scene.playerLane*width*.075/target.depth
             const y=horizon+height*.32/target.depth
             const boardWidth=Math.min(width*.19,155*scale)
