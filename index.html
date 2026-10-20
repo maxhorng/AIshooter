@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101714">
-  <meta name="description" content="AIshooter 精準射擊訓練場，挑戰移動假人靶，練習爆頭、連續射擊與壓槍控制。">
-  <title>AIshooter｜精準射擊訓練場</title>
+  <meta name="description" content="AIshooter 加減法射擊遊戲，命中假人身上的算式與正確答案配對得分。">
+  <title>AIshooter｜數學配對射擊訓練場</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,35 +107,35 @@
 <body>
   <header class="site-header page-gutter">
     <div class="header-inner">
-      <a class="brand" href="#top" aria-label="AIshooter 首頁"><span class="brand-icon">✳</span><span class="brand-name">AIshooter<small>AIM TRAINING</small></span></a>
+      <a class="brand" href="#top" aria-label="AIshooter 首頁"><span class="brand-icon">✳</span><span class="brand-name">AIshooter<small>MATH RANGE</small></span></a>
       <div class="header-right"><div class="system-status"><span class="status-dot"></span>訓練場系統待命</div><div class="header-score">個人最佳 <strong id="best-score">000000</strong></div></div>
     </div>
   </header>
   <main id="top" class="page-gutter">
-    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;PRECISION RANGE</div><h1>瞄得準，壓得住。</h1></div><div class="topline-note">假人靶會持續加速移動。瞄準頭部一發擊倒，命中身體三發擊倒，連射時向下壓槍修正後座力。</div></div>
-    <section class="game-panel" aria-label="AIshooter 精準射擊訓練場">
+    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;MATH RANGE</div><h1>算式配對，精準出擊。</h1></div><div class="topline-note">一輪出現多個假人，身上各有算式或答案。靶子不會移動，但遠近與大小每輪隨機。命中正確算式與答案組合才能得分。</div></div>
+    <section class="game-panel" aria-label="AIshooter 數學配對射擊訓練場">
       <div class="game-frame" id="game"></div>
       <div class="game-ui" aria-hidden="true">
         <div class="ui-top">
           <div class="readout"><span>SCORE</span><strong id="score-display">000000</strong></div>
           <div class="readouts-right"><div class="readout"><span>TIME</span><strong id="time-display">01:00</strong></div><div class="readout"><span>STREAK</span><strong id="streak-display">× 00</strong></div><div class="readout"><span>ACCURACY</span><strong id="accuracy-display">--</strong></div></div>
         </div>
-        <div class="ui-bottom"><div class="mission-box"><span>MISSION</span><strong id="mission-display">頭部一發擊倒，身體三發擊倒</strong></div><div class="weapon-label">HOLD TO FIRE&nbsp;&nbsp; PULL DOWN TO CONTROL RECOIL</div></div>
+        <div class="ui-bottom"><div class="mission-box"><span>MISSION</span><strong id="mission-display">先射算式，再射配對答案</strong></div><div class="weapon-label">HOLD TO FIRE&nbsp;&nbsp; PULL DOWN TO CONTROL RECOIL</div></div>
       </div>
       <div class="game-overlay" id="overlay">
         <div class="launch-card">
           <div class="launch-kicker">AIshooter&nbsp; / &nbsp;FIELD TRAINING</div>
-          <h2 id="overlay-title">進入精準射擊訓練</h2>
-          <p id="overlay-copy">限時 60 秒挑戰移動假人靶。頭部一發擊倒，身體要命中三發。靶速會隨時間增加，按住左鍵連射時記得向下壓槍。</p>
+          <h2 id="overlay-title">進入數學配對訓練</h2>
+          <p id="overlay-copy">限時 60 秒挑戰靜止假人靶。每個假人代表一道算式或一個答案，射中正確配對才能得分。頭部一發擊倒，身體要命中三發。</p>
           <div class="launch-controls" id="launch-controls">
-            <div><label for="difficulty-mode">起始靶速</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
+            <div><label for="difficulty-mode">題目難度</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
           </div>
           <button class="btn-launch" id="start-button" type="button">開始訓練</button>
-          <div class="overlay-hint">移動滑鼠瞄準，按住左鍵連續射擊<br>連射時向下移動滑鼠壓住後座力</div>
+          <div class="overlay-hint">先射中一道算式，再射中它的答案<br>頭部一發擊倒，身體三發，連射時向下壓槍</div>
         </div>
       </div>
     </section>
-    <div class="game-footer"><div class="controls"><span><kbd class="control-key">滑鼠</kbd>瞄準</span><span><kbd class="control-key">按住左鍵</kbd>連射</span><span><kbd class="control-key">向下</kbd>壓槍</span><span><kbd class="control-key">A</kbd><kbd class="control-key">D</kbd>移動</span></div><div class="footer-state"><b>LIVE</b>&nbsp; 移動靶精準射擊</div></div>
+    <div class="game-footer"><div class="controls"><span><kbd class="control-key">滑鼠</kbd>瞄準</span><span><kbd class="control-key">按住左鍵</kbd>連射</span><span><kbd class="control-key">向下</kbd>壓槍</span><span><kbd class="control-key">A</kbd><kbd class="control-key">D</kbd>移動</span></div><div class="footer-state"><b>LIVE</b>&nbsp; 加減法配對射擊</div></div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
   <script>
@@ -179,7 +179,6 @@
         scene.timeLeft=60
         scene.elapsedMs=0
         scene.difficulty='calm'
-        scene.baseSpeed=55
         scene.playerLane=0
         scene.message='頭部一發擊倒，身體三發擊倒'
         scene.aim={x:scene.scale.width/2,y:scene.scale.height/2}
@@ -191,7 +190,7 @@
         scene.fireTimer=0
         scene.nextShotAt=0
         scene.state='menu'
-        scene.dummy=null
+        scene.targets=[]
         scene.draw=()=>{
           const graphics=scene.paint
           const fx=scene.overlayPaint
@@ -221,18 +220,21 @@
             graphics.fillStyle(i%2===0?0x243b34:0x334a39,1).fillCircle(side,y,size)
             graphics.fillStyle(0xa1b77b,.48).fillCircle(side-size*.25,y-size*.3,size*.42)
           }
-          const dummy=scene.dummy
-          if(dummy&&dummy.active){
-            const x=dummy.x
-            const scale=worldScale*dummy.scale
-            const groundY=height*.83
+          scene.targets.slice().sort((a,b)=>b.distance-a.distance).forEach(target=>{
+            if(!target.active||!target.visible)return
+            const x=target.xNorm*width
+            const scale=worldScale*target.scale
+            const groundY=height*(.87-target.distance*.16)
             const headRadius=20*scale
             const headY=groundY-151*scale
             const torsoTop=headY+24*scale
             const torsoBottom=groundY-39*scale
             const torsoWidth=51*scale
-            dummy.headZone={x,y:headY,radius:headRadius*.78}
-            dummy.bodyZone={left:x-31*scale,right:x+31*scale,top:torsoTop,bottom:torsoBottom}
+            const plaqueWidth=Math.max(58,116*scale)
+            const plaqueHeight=Math.max(20,29*scale)
+            const plaqueY=headY-headRadius-19*scale
+            target.headZone={x,y:headY,radius:headRadius*.78}
+            target.bodyZone={left:x-31*scale,right:x+31*scale,top:torsoTop,bottom:torsoBottom}
             graphics.fillStyle(0x101714,.5).fillEllipse(x,groundY+5*scale,91*scale,15*scale)
             graphics.lineStyle(15*scale,0x705d46,1)
             graphics.lineBetween(x-15*scale,torsoBottom-2*scale,x-22*scale,groundY)
@@ -240,8 +242,7 @@
             graphics.lineStyle(13*scale,0xa88b63,1)
             graphics.lineBetween(x-torsoWidth*.37,torsoTop+13*scale,x-39*scale,torsoBottom-15*scale)
             graphics.lineBetween(x+torsoWidth*.37,torsoTop+13*scale,x+39*scale,torsoBottom-15*scale)
-            graphics.fillStyle(dummy.hitFlash>0?0xf5c1a0:0xb99a6c,1)
-            graphics.fillRoundedRect(x-torsoWidth/2,torsoTop,torsoWidth,torsoBottom-torsoTop,9*scale)
+            graphics.fillStyle(0xb99a6c,1).fillRoundedRect(x-torsoWidth/2,torsoTop,torsoWidth,torsoBottom-torsoTop,9*scale)
             graphics.lineStyle(3*scale,0x574a39,1).strokeRoundedRect(x-torsoWidth/2,torsoTop,torsoWidth,torsoBottom-torsoTop,9*scale)
             graphics.fillStyle(0x8c7658,1).fillRoundedRect(x-8*scale,headY+14*scale,16*scale,20*scale,4*scale)
             graphics.fillStyle(0xd6b88a,1).fillCircle(x,headY,headRadius)
@@ -255,14 +256,16 @@
             graphics.lineStyle(3*scale,0x17211c,1)
             graphics.lineBetween(x-7*scale,groundY-5*scale,x-25*scale,groundY)
             graphics.lineBetween(x+7*scale,groundY-5*scale,x+25*scale,groundY)
-            if(dummy.bodyHits>0){
-              graphics.fillStyle(0x101714,.88).fillRoundedRect(x-25*scale,torsoBottom-24*scale,50*scale,17*scale,5*scale)
-              dummy.bodyLabel.setPosition(x,torsoBottom-15*scale).setText('BODY '+dummy.bodyHits+'/3').setFontSize(Math.max(9,Math.round(10*scale))).setVisible(true)
-            }else dummy.bodyLabel.setVisible(false)
-            if(dummy.hitFlash>0){
-              fx.lineStyle(3,0xff795d,.9).strokeCircle(x,headY,headRadius*1.24)
-            }
-          }else if(dummy){dummy.bodyLabel.setVisible(false)}
+            const plaqueColor=target.kind==='equation'?0xc1f36d:0xf3e1a0
+            graphics.fillStyle(0x101714,.72).fillRoundedRect(x-plaqueWidth/2-3*scale,plaqueY-plaqueHeight/2,plaqueWidth+6*scale,plaqueHeight,6*scale)
+            graphics.fillStyle(plaqueColor,1).fillRoundedRect(x-plaqueWidth/2,plaqueY-plaqueHeight/2+2*scale,plaqueWidth,plaqueHeight-3*scale,5*scale)
+            target.text.setPosition(x,plaqueY).setFontSize(Math.max(9,Math.round(21*scale))).setVisible(true)
+            if(target.bodyHits>0){
+              graphics.fillStyle(0x101714,.9).fillRoundedRect(x-25*scale,torsoBottom-24*scale,50*scale,17*scale,5*scale)
+              target.bodyLabel.setPosition(x,torsoBottom-15*scale).setText('BODY '+target.bodyHits+'/3').setFontSize(Math.max(8,Math.round(10*scale))).setVisible(true)
+            }else target.bodyLabel.setVisible(false)
+            if(target.hitFlash>0)fx.lineStyle(3,0xff795d,.9).strokeCircle(x,headY,headRadius*1.24)
+          })
           fx.clear()
           if(scene.flashAlpha>0){fx.fillStyle(0xc1f36d,scene.flashAlpha).fillRect(0,0,width,height)}
           const crossX=scene.aim.x
@@ -289,20 +292,46 @@
           fx.fillStyle(scene.recoil>45?0xff795d:0xc1f36d,1).fillRoundedRect(recoilX,recoilY,recoilWidth*Math.min(scene.recoil/80,1),7*worldScale,4)
           if(scene.state==='menu')graphics.fillStyle(0x101714,.2).fillRect(0,0,width,height)
         }
-        scene.spawnDummy=()=>{
-          if(scene.dummy)scene.dummy.bodyLabel.destroy()
-          const width=scene.scale.width
-          scene.dummy={
-            x:Phaser.Math.Between(Math.round(width*.3),Math.round(width*.7)),
-            direction:Math.random()<.5?-1:1,
-            scale:Phaser.Math.FloatBetween(.92,1.08),
-            bodyHits:0,
-            active:true,
-            hitFlash:0,
-            headZone:null,
-            bodyZone:null,
-            bodyLabel:scene.add.text(0,0,'',{fontFamily:'DM Mono, monospace',fontSize:'10px',fontStyle:'bold',color:'#f7e8c5',backgroundColor:'#101714',padding:{x:4,y:2}}).setOrigin(.5).setDepth(5)
+        scene.spawnRound=()=>{
+          scene.targets.forEach(target=>{target.text.destroy();target.bodyLabel.destroy()})
+          const max=scene.difficulty==='calm'?12:scene.difficulty==='standard'?30:60
+          const pairs=[]
+          for(let pairId=0;pairId<4;pairId++){
+            const operation=Math.random()<.5?'addition':'subtraction'
+            let left=Phaser.Math.Between(2,max)
+            let right=Phaser.Math.Between(1,Math.min(max,20))
+            if(operation==='subtraction'&&right>left){const swap=left;left=right;right=swap}
+            const answer=operation==='addition'?left+right:left-right
+            const expression=operation==='addition'?left+' + '+right:left+' − '+right
+            pairs.push({pairId,expression,answer})
           }
+          const newTargets=[]
+          pairs.forEach(pair=>{
+            newTargets.push({kind:'equation',label:pair.expression,pairId:pair.pairId})
+            newTargets.push({kind:'answer',label:String(pair.answer),pairId:pair.pairId})
+          })
+          Phaser.Utils.Array.Shuffle(newTargets)
+          scene.targets=newTargets.map((target,index)=>{
+            const distance=Phaser.Math.FloatBetween(.38,1.38)
+            target.xNorm=(index+.5)/newTargets.length+Phaser.Math.FloatBetween(-.012,.012)
+            target.distance=distance
+            target.scale=1.45-distance*.65
+            target.bodyHits=0
+            target.active=true
+            target.visible=false
+            target.appearAt=scene.elapsedMs+Phaser.Math.Between(120,1500)
+            target.hitFlash=0
+            target.headZone=null
+            target.bodyZone=null
+            const labelColor=target.kind==='equation'?'#172115':'#3d2a12'
+            target.text=scene.add.text(0,0,target.label,{fontFamily:'DM Sans, Noto Sans TC, sans-serif',fontSize:'18px',fontStyle:'bold',color:labelColor,align:'center'}).setOrigin(.5).setVisible(false).setDepth(4)
+            target.bodyLabel=scene.add.text(0,0,'',{fontFamily:'DM Mono, monospace',fontSize:'10px',fontStyle:'bold',color:'#f7e8c5',backgroundColor:'#101714',padding:{x:4,y:2}}).setOrigin(.5).setVisible(false).setDepth(5)
+            return target
+          })
+          scene.selectedEquation=null
+          scene.selectedAnswer=null
+          scene.message='先射算式，再射配對答案'
+          scene.updateHud()
           scene.draw()
         }
         scene.updateHud=()=>{
@@ -312,12 +341,11 @@
           const minutes=String(Math.floor(scene.timeLeft/60)).padStart(2,'0')
           const seconds=String(scene.timeLeft%60).padStart(2,'0')
           ui.time.textContent=minutes+':'+seconds
-          const speed=Math.round(scene.baseSpeed+scene.elapsedMs*.0028)
-          ui.mission.textContent='靶速 '+String(speed).padStart(3,'0')+'  ·  '+scene.message
+          const remaining=scene.targets.filter(target=>target.active).length
+          ui.mission.textContent='靶子 '+String(remaining).padStart(2,'0')+'  ·  '+scene.message
         }
         scene.start=()=>{
           scene.difficulty=ui.difficulty.value
-          scene.baseSpeed=scene.difficulty==='calm'?55:scene.difficulty==='standard'?85:115
           scene.score=0
           scene.streak=0
           scene.eliminations=0
@@ -333,10 +361,8 @@
           gameState='playing'
           scene.state='playing'
           ui.overlay.classList.add('is-hidden')
-          scene.message='頭部一發擊倒，身體三發擊倒'
-          if(scene.dummy)scene.dummy.bodyLabel.destroy()
-          scene.dummy=null
-          scene.spawnDummy()
+          scene.message='先射算式，再射配對答案'
+          scene.spawnRound()
           if(scene.timerEvent)scene.timerEvent.remove(false)
           scene.timerEvent=scene.time.addEvent({delay:1000,loop:true,callback:()=>{
             if(gameState!=='playing')return
@@ -355,7 +381,7 @@
           if(scene.score>bestScore){bestScore=scene.score;localStorage.setItem('aishooterBest',String(bestScore));ui.best.textContent=numberText(bestScore)}
           const accuracy=scene.shots?Math.round(scene.hits/scene.shots*100):0
           ui.title.textContent='訓練結束'
-          ui.copy.textContent='本回合擊倒 '+scene.eliminations+' 個假人，命中率 '+accuracy+'%，得分 '+numberText(scene.score)+'。按住左鍵連射，向下壓槍控制後座力。'
+          ui.copy.textContent='本回合完成 '+scene.eliminations+' 次假人射擊，命中率 '+accuracy+'%，得分 '+numberText(scene.score)+'。頭部一發，身體三發，配對正確才得分。'
           ui.start.textContent='再次開始'
           ui.overlay.classList.remove('is-hidden')
           scene.message='時間到，準備好就再次出擊'
@@ -369,44 +395,34 @@
           scene.recoil=Math.min(82,scene.recoil+(scene.fireHeld?10:8))
           scene.weaponKick=15
           scene.muzzleFlash=.9
-          const dummy=scene.dummy
           const shotX=scene.aim.x
           const shotY=scene.aim.y-scene.recoil+(scene.fireHeld?10:8)
+          let hitTarget=null
           let zone=null
-          if(dummy&&dummy.active&&dummy.headZone){
-            const head=dummy.headZone
-            if(Math.hypot(shotX-head.x,shotY-head.y)<=head.radius)zone='head'
-            else{
-              const body=dummy.bodyZone
-              if(shotX>=body.left&&shotX<=body.right&&shotY>=body.top&&shotY<=body.bottom)zone='body'
-            }
+          for(const target of scene.targets){
+            if(!target.active||!target.visible||!target.headZone)continue
+            const head=target.headZone
+            if(Math.hypot(shotX-head.x,shotY-head.y)<=head.radius){hitTarget=target;zone='head';break}
+            const body=target.bodyZone
+            if(shotX>=body.left&&shotX<=body.right&&shotY>=body.top&&shotY<=body.bottom){hitTarget=target;zone='body';break}
           }
-          if(zone){
+          if(hitTarget){
             scene.hits++
             scene.lastHit=true
             scene.flashAlpha=.08
             scene.cameras.main.shake(55,.001)
-            if(zone==='head'){
-              scene.message='爆頭命中，一發擊倒  +150'
-              scene.score+=150+Math.min(scene.streak,10)*15
-              scene.streak++
-              scene.eliminations++
-              dummy.active=false
-              dummy.bodyLabel.setVisible(false)
-              scene.time.delayedCall(260,()=>{if(gameState==='playing')scene.spawnDummy()})
-            }else{
-              dummy.bodyHits++
-              dummy.hitFlash=130
-              if(dummy.bodyHits>=3){
-                scene.message='身體命中三發，目標擊倒  +75'
-                scene.score+=75+Math.min(scene.streak,10)*10
-                scene.streak++
-                scene.eliminations++
-                dummy.active=false
-                dummy.bodyLabel.setVisible(false)
-                scene.time.delayedCall(260,()=>{if(gameState==='playing')scene.spawnDummy()})
-              }else scene.message='身體命中 '+dummy.bodyHits+'/3，再補幾發'
+            if(zone==='body'){
+              hitTarget.bodyHits++
+              hitTarget.hitFlash=130
             }
+            const eliminated=zone==='head'||hitTarget.bodyHits>=3
+            if(eliminated){
+              hitTarget.active=false
+              hitTarget.text.setVisible(false)
+              hitTarget.bodyLabel.setVisible(false)
+              scene.eliminations++
+              scene.registerTarget(hitTarget)
+            }else scene.message='身體命中 '+hitTarget.bodyHits+'/3，再補幾發'
           }else{
             scene.lastHit=false
             scene.streak=0
@@ -414,6 +430,43 @@
           }
           scene.updateHud()
           scene.draw()
+        }
+        scene.registerTarget=target=>{
+          if(target.kind==='equation'){
+            if(scene.selectedAnswer===null){
+              scene.selectedEquation=target.pairId
+              scene.message='算式已鎖定，現在射中相符答案'
+              return
+            }
+            if(scene.selectedAnswer===target.pairId){
+              scene.score+=120+Math.min(scene.streak,10)*15
+              scene.streak++
+              scene.message='算式與答案配對正確  +120'
+            }else{
+              scene.score=Math.max(0,scene.score-25)
+              scene.streak=0
+              scene.message='配對錯誤  扣 25 分，重整靶場'
+            }
+          }else{
+            if(scene.selectedEquation===null){
+              scene.selectedAnswer=target.pairId
+              scene.message='答案已鎖定，現在射中對應算式'
+              return
+            }
+            if(scene.selectedEquation===target.pairId){
+              scene.score+=120+Math.min(scene.streak,10)*15
+              scene.streak++
+              scene.message='算式與答案配對正確  +120'
+            }else{
+              scene.score=Math.max(0,scene.score-25)
+              scene.streak=0
+              scene.message='配對錯誤  扣 25 分，重整靶場'
+            }
+          }
+          scene.selectedEquation=null
+          scene.selectedAnswer=null
+          if(scene.score>bestScore){bestScore=scene.score;localStorage.setItem('aishooterBest',String(bestScore));ui.best.textContent=numberText(bestScore)}
+          scene.time.delayedCall(620,()=>{if(gameState==='playing')scene.spawnRound()})
         }
         scene.input.on('pointermove',pointer=>{scene.aim={x:pointer.x,y:pointer.y};scene.draw()})
         scene.input.on('pointerdown',pointer=>{
@@ -433,16 +486,10 @@
           if(gameState!=='playing')return
           const step=Math.min(delta,60)
           scene.elapsedMs+=step
-          const dummy=scene.dummy
-          if(dummy&&dummy.active){
-            const speed=scene.baseSpeed+scene.elapsedMs*.0028
-            dummy.x+=dummy.direction*speed*step/1000*scene.scale.width/1100
-            const left=scene.scale.width*.16
-            const right=scene.scale.width*.84
-            if(dummy.x<left){dummy.x=left;dummy.direction=1}
-            if(dummy.x>right){dummy.x=right;dummy.direction=-1}
-            dummy.hitFlash=Math.max(0,dummy.hitFlash-step)
-          }
+          scene.targets.forEach(target=>{
+            if(!target.visible&&scene.elapsedMs>=target.appearAt)target.visible=true
+            target.hitFlash=Math.max(0,target.hitFlash-step)
+          })
           scene.recoil=Math.max(0,scene.recoil-step*.035)
           scene.weaponKick=Math.max(0,scene.weaponKick-step*.065)
           scene.muzzleFlash=Math.max(0,scene.muzzleFlash-step*.006)
@@ -461,8 +508,8 @@
     }
     const phaserGame=new Phaser.Game(gameConfig)
     ui.start.addEventListener('click',()=>{
-      ui.title.textContent='進入精準射擊訓練'
-      ui.copy.textContent='限時 60 秒挑戰移動假人靶。頭部一發擊倒，身體要命中三發。靶速會隨時間增加，按住左鍵連射時記得向下壓槍。'
+      ui.title.textContent='進入數學配對訓練'
+      ui.copy.textContent='限時 60 秒挑戰靜止假人靶。每個假人代表一道算式或一個答案，射中正確配對才能得分。頭部一發擊倒，身體要命中三發。'
       ui.start.textContent='開始訓練'
       gameScene.start()
     })
