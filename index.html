@@ -112,7 +112,7 @@
     </div>
   </header>
   <main id="top" class="page-gutter">
-    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;MATH RANGE</div><h1>算式配對，精準出擊。</h1></div><div class="topline-note">綠牌是算式，金牌是答案。一輪出現多個靜止假人，遠近與大小每輪隨機。命中正確配對才能得分。</div></div>
+    <div class="topline"><div><div class="eyebrow">SIMULATION 01&nbsp; / &nbsp;MATH RANGE</div><h1>算式配對，精準出擊。</h1></div><div class="topline-note">每輪隨機切換心算、填空或相等算式題。假人靜止不動，射中符合題意的配對才能得分。</div></div>
     <section class="game-panel" aria-label="AIshooter 數學配對射擊訓練場">
       <div class="game-frame" id="game"></div>
       <div class="game-ui" aria-hidden="true">
@@ -126,12 +126,12 @@
         <div class="launch-card">
           <div class="launch-kicker">AIshooter&nbsp; / &nbsp;FIELD TRAINING</div>
           <h2 id="overlay-title">進入數學配對訓練</h2>
-          <p id="overlay-copy">限時 60 秒挑戰靜止假人靶。綠牌是假人算式，金牌是假人答案。射中正確配對才能得分。頭部一發擊倒，身體要命中三發。</p>
+          <p id="overlay-copy">限時 60 秒挑戰靜止假人靶。每輪隨機出現算式配答案、填空找缺數或相等算式題。依任務射中正確的兩個牌子才能得分。頭部一發擊倒，身體要命中三發。</p>
           <div class="launch-controls" id="launch-controls">
             <div><label for="difficulty-mode">題目難度</label><select class="form-select" id="difficulty-mode"><option value="calm">暖身訓練</option><option value="standard">標準訓練</option><option value="rapid">極速訓練</option></select></div>
           </div>
           <button class="btn-launch" id="start-button" type="button">開始訓練</button>
-          <div class="overlay-hint">先射中一道算式，再射中它的答案<br>頭部一發擊倒，身體三發，連射時向下壓槍</div>
+          <div class="overlay-hint">依左下角任務找出兩個正確目標，先射哪一個都可以<br>頭部一發擊倒，身體三發，連射時向下壓槍</div>
         </div>
       </div>
     </section>
@@ -296,24 +296,49 @@
         scene.spawnRound=()=>{
           scene.targets.forEach(target=>{target.text.destroy();target.bodyLabel.destroy()})
           const max=scene.difficulty==='calm'?12:scene.difficulty==='standard'?30:60
+          scene.questionMode=Phaser.Utils.Array.GetRandom(['answer','missing','equivalent'])
           const pairs=[]
           const usedAnswers=new Set()
           while(pairs.length<4){
             const pairId=pairs.length
-            const operation=Math.random()<.5?'addition':'subtraction'
-            let left=Phaser.Math.Between(2,max)
-            let right=Phaser.Math.Between(1,Math.min(max,20))
-            if(operation==='subtraction'&&right>left){const swap=left;left=right;right=swap}
-            const answer=operation==='addition'?left+right:left-right
-            if(usedAnswers.has(answer))continue
-            usedAnswers.add(answer)
-            const expression=operation==='addition'?left+' + '+right:left+' − '+right
-            pairs.push({pairId,expression,answer})
+            if(scene.questionMode==='answer'){
+              const operation=Math.random()<.5?'addition':'subtraction'
+              let left=Phaser.Math.Between(2,max)
+              let right=Phaser.Math.Between(1,Math.min(max,20))
+              if(operation==='subtraction'&&right>left){const swap=left;left=right;right=swap}
+              const answer=operation==='addition'?left+right:left-right
+              if(usedAnswers.has(answer))continue
+              usedAnswers.add(answer)
+              const expression=operation==='addition'?left+' + '+right:left+' − '+right
+              pairs.push({pairId,expressions:[expression],answer,kind:'answer'})
+            }else if(scene.questionMode==='missing'){
+              const missing=Phaser.Math.Between(1,max)
+              const known=Phaser.Math.Between(1,Math.min(max,20))
+              const addition=Math.random()<.5
+              const answer=missing
+              if(usedAnswers.has(answer))continue
+              usedAnswers.add(answer)
+              const expression=addition?'□ + '+known+' = '+(missing+known):(missing+known)+' − □ = '+known
+              pairs.push({pairId,expressions:[expression],answer,kind:'answer'})
+            }else{
+              const answer=Phaser.Math.Between(2,Math.max(3,max-1))
+              if(usedAnswers.has(answer))continue
+              usedAnswers.add(answer)
+              const expressionForResult=()=>{
+                const addition=Math.random()<.5
+                if(addition){const left=Phaser.Math.Between(1,answer-1);return left+' + '+(answer-left)}
+                const left=Phaser.Math.Between(answer+1,max);return left+' − '+(left-answer)
+              }
+              const first=expressionForResult()
+              let second=expressionForResult()
+              while(second===first)second=expressionForResult()
+              pairs.push({pairId,expressions:[first,second],answer,kind:'equation'})
+            }
           }
           const newTargets=[]
           pairs.forEach(pair=>{
-            newTargets.push({kind:'equation',label:pair.expression,pairId:pair.pairId})
-            newTargets.push({kind:'answer',label:String(pair.answer),pairId:pair.pairId})
+            pair.expressions.forEach(expression=>newTargets.push({kind:'equation',label:expression,pairId:pair.pairId}))
+            if(pair.kind==='answer')newTargets.push({kind:'answer',label:String(pair.answer),pairId:pair.pairId})
           })
           Phaser.Utils.Array.Shuffle(newTargets)
           scene.targets=newTargets.map((target,index)=>{
@@ -333,9 +358,8 @@
             target.bodyLabel=scene.add.text(0,0,'',{fontFamily:'DM Mono, monospace',fontSize:'10px',fontStyle:'bold',color:'#f7e8c5',backgroundColor:'#101714',padding:{x:4,y:2}}).setOrigin(.5).setVisible(false).setDepth(5)
             return target
           })
-          scene.selectedEquation=null
-          scene.selectedAnswer=null
-          scene.message='先射算式，再射配對答案'
+          scene.selectedPair=null
+          scene.message=scene.questionMode==='answer'?'心算題  找出算式與答案':scene.questionMode==='missing'?'填空題  找出算式與缺數':'相等題  找出兩道結果相同的算式'
           scene.updateHud()
           scene.draw()
         }
@@ -438,39 +462,21 @@
           scene.draw()
         }
         scene.registerTarget=target=>{
-          if(target.kind==='equation'){
-            if(scene.selectedAnswer===null){
-              scene.selectedEquation=target.pairId
-              scene.message='算式已鎖定，現在射中相符答案'
-              return
-            }
-            if(scene.selectedAnswer===target.pairId){
-              scene.score+=120+Math.min(scene.streak,10)*15
-              scene.streak++
-              scene.message='算式與答案配對正確  +120'
-            }else{
-              scene.score=Math.max(0,scene.score-25)
-              scene.streak=0
-              scene.message='配對錯誤  扣 25 分，重整靶場'
-            }
-          }else{
-            if(scene.selectedEquation===null){
-              scene.selectedAnswer=target.pairId
-              scene.message='答案已鎖定，現在射中對應算式'
-              return
-            }
-            if(scene.selectedEquation===target.pairId){
-              scene.score+=120+Math.min(scene.streak,10)*15
-              scene.streak++
-              scene.message='算式與答案配對正確  +120'
-            }else{
-              scene.score=Math.max(0,scene.score-25)
-              scene.streak=0
-              scene.message='配對錯誤  扣 25 分，重整靶場'
-            }
+          if(scene.selectedPair===null){
+            scene.selectedPair=target.pairId
+            scene.message='目標已鎖定，依任務射中正確配對'
+            return
           }
-          scene.selectedEquation=null
-          scene.selectedAnswer=null
+          if(scene.selectedPair===target.pairId){
+            scene.score+=120+Math.min(scene.streak,10)*15
+            scene.streak++
+            scene.message='答案正確  +120'
+          }else{
+            scene.score=Math.max(0,scene.score-25)
+            scene.streak=0
+            scene.message='配對錯誤  扣 25 分，重整靶場'
+          }
+          scene.selectedPair=null
           if(scene.score>bestScore){bestScore=scene.score;localStorage.setItem('aishooterBest',String(bestScore));ui.best.textContent=numberText(bestScore)}
           scene.time.delayedCall(620,()=>{if(gameState==='playing')scene.spawnRound()})
         }
@@ -515,7 +521,7 @@
     const phaserGame=new Phaser.Game(gameConfig)
     ui.start.addEventListener('click',()=>{
       ui.title.textContent='進入數學配對訓練'
-      ui.copy.textContent='限時 60 秒挑戰靜止假人靶。綠牌是假人算式，金牌是假人答案。射中正確配對才能得分。頭部一發擊倒，身體要命中三發。'
+      ui.copy.textContent='限時 60 秒挑戰靜止假人靶。每輪隨機出現算式配答案、填空找缺數或相等算式題。依任務射中正確的兩個牌子才能得分。頭部一發擊倒，身體要命中三發。'
       ui.start.textContent='開始訓練'
       gameScene.start()
     })
